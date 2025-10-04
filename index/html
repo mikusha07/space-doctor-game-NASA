@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Doctor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .space-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0c0c2e 0%, #1a1a4a 25%, #2d1b69 50%, #4c1d95 75%, #1e1b4b 100%);
+            z-index: -2;
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+        
+        .star:nth-child(odd) {
+            animation-delay: 1s;
+        }
+        
+        .star:nth-child(3n) {
+            animation-delay: 2s;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(147, 197, 253, 0.3);
+            border-radius: 50%;
+            animation: float 8s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        /* Character Animations */
+        .character {
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.5));
+        }
+        
+        .sick {
+            animation: sickShake 0.6s ease-in-out infinite;
+            filter: drop-shadow(0 0 25px rgba(239, 68, 68, 0.9)) hue-rotate(10deg);
+        }
+        
+        .happy {
+            animation: happyBounce 1.2s ease-in-out;
+            filter: drop-shadow(0 0 35px rgba(34, 197, 94, 0.9)) brightness(1.2);
+        }
+        
+        .sad {
+            animation: sadAnimation 2s ease-in-out;
+            filter: drop-shadow(0 0 30px rgba(251, 191, 36, 0.9)) saturate(1.3);
+        }
+        
+        .dead {
+            animation: deathAnimation 3s ease-in-out forwards;
+            filter: drop-shadow(0 0 35px rgba(127, 29, 29, 1)) grayscale(0.7);
+        }
+        
+        .scared {
+            animation: scaredShiver 1.5s ease-in-out;
+            filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.8));
+        }
+        
+        .excited {
+            animation: excitedSpin 1s ease-in-out;
+            filter: drop-shadow(0 0 25px rgba(59, 130, 246, 0.8));
+        }
+        
+        .confused {
+            animation: confusedWobble 1.2s ease-in-out;
+            filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.8));
+        }
+        
+        .dizzy {
+            animation: dizzySwirl 2s ease-in-out;
+            filter: drop-shadow(0 0 25px rgba(139, 69, 19, 0.8));
+        }
+        
+        .shocked {
+            animation: shockedJump 1s ease-in-out;
+            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.9));
+        }
+        
+        .weak {
+            animation: weakSway 2s ease-in-out;
+            filter: drop-shadow(0 0 15px rgba(128, 128, 128, 0.7));
+        }
+        
+        @keyframes sickShake {
+            0%, 100% { transform: translateX(0) rotate(0deg) scale(1); }
+            15% { transform: translateX(-6px) rotate(-4deg) scale(0.94); }
+            30% { transform: translateX(6px) rotate(4deg) scale(1.06); }
+            45% { transform: translateX(-4px) rotate(-2deg) scale(0.96); }
+            60% { transform: translateX(4px) rotate(2deg) scale(1.04); }
+            75% { transform: translateX(-2px) rotate(-1deg) scale(0.98); }
+            90% { transform: translateX(2px) rotate(1deg) scale(1.02); }
+        }
+        
+        @keyframes happyBounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+            5% { transform: translateY(-8px) scale(1.08) rotate(-3deg); }
+            15% { transform: translateY(-5px) scale(1.05) rotate(2deg); }
+            35% { transform: translateY(-25px) scale(1.2) rotate(3deg); }
+            45% { transform: translateY(-18px) scale(1.15) rotate(-2deg); }
+            65% { transform: translateY(-12px) scale(1.1) rotate(1deg); }
+            75% { transform: translateY(-6px) scale(1.05) rotate(-1deg); }
+        }
+        
+        @keyframes sadAnimation {
+            0% { transform: scale(1) rotate(0deg); }
+            12% { transform: scale(1.15) rotate(-5deg); }
+            25% { transform: scale(1.25) rotate(5deg); }
+            37% { transform: scale(1.2) rotate(-4deg); }
+            50% { transform: scale(1.3) rotate(4deg); }
+            62% { transform: scale(1.25) rotate(-3deg); }
+            75% { transform: scale(1.15) rotate(3deg); }
+            87% { transform: scale(1.08) rotate(-1deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        
+        @keyframes deathAnimation {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; }
+            20% { transform: scale(1.3) rotate(10deg); opacity: 0.95; }
+            40% { transform: scale(1.5) rotate(25deg); opacity: 0.8; }
+            60% { transform: scale(1.2) rotate(-15deg); opacity: 0.6; }
+            80% { transform: scale(0.8) rotate(-30deg); opacity: 0.4; }
+            100% { transform: scale(0.5) rotate(-45deg); opacity: 0.1; }
+        }
+        
+        @keyframes scaredShiver {
+            0%, 100% { transform: scale(1) rotate(0deg) translateY(0); }
+            8% { transform: scale(0.92) rotate(-2deg) translateY(-2px); }
+            16% { transform: scale(1.08) rotate(2deg) translateY(2px); }
+            24% { transform: scale(0.96) rotate(-1deg) translateY(-1px); }
+            32% { transform: scale(1.04) rotate(1deg) translateY(1px); }
+            40% { transform: scale(0.94) rotate(-2deg) translateY(-2px); }
+            48% { transform: scale(1.06) rotate(2deg) translateY(2px); }
+            56% { transform: scale(0.98) rotate(-1deg) translateY(-1px); }
+            64% { transform: scale(1.02) rotate(1deg) translateY(1px); }
+            72% { transform: scale(0.96) rotate(-0.5deg) translateY(-0.5px); }
+            80% { transform: scale(1.04) rotate(0.5deg) translateY(0.5px); }
+            88% { transform: scale(0.99) rotate(-0.2deg) translateY(-0.2px); }
+            96% { transform: scale(1.01) rotate(0.2deg) translateY(0.2px); }
+        }
+        
+        @keyframes excitedSpin {
+            0% { transform: scale(1) rotate(0deg) translateY(0); }
+            20% { transform: scale(1.15) rotate(72deg) translateY(-5px); }
+            40% { transform: scale(1.25) rotate(144deg) translateY(-10px); }
+            60% { transform: scale(1.2) rotate(216deg) translateY(-8px); }
+            80% { transform: scale(1.1) rotate(288deg) translateY(-3px); }
+            100% { transform: scale(1) rotate(360deg) translateY(0); }
+        }
+        
+        @keyframes confusedWobble {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            15% { transform: rotate(8deg) scale(1.05); }
+            30% { transform: rotate(-8deg) scale(0.95); }
+            45% { transform: rotate(6deg) scale(1.03); }
+            60% { transform: rotate(-6deg) scale(0.97); }
+            75% { transform: rotate(4deg) scale(1.02); }
+            90% { transform: rotate(-2deg) scale(0.99); }
+        }
+        
+        @keyframes dizzySwirl {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(90deg) scale(1.1); }
+            50% { transform: rotate(180deg) scale(0.9); }
+            75% { transform: rotate(270deg) scale(1.05); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        
+        @keyframes shockedJump {
+            0%, 100% { transform: translateY(0) scale(1); }
+            20% { transform: translateY(-30px) scale(1.3); }
+            40% { transform: translateY(-20px) scale(1.2); }
+            60% { transform: translateY(-10px) scale(1.1); }
+            80% { transform: translateY(-5px) scale(1.05); }
+        }
+        
+        @keyframes weakSway {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(3deg) scale(0.95); }
+            50% { transform: rotate(-3deg) scale(0.9); }
+            75% { transform: rotate(2deg) scale(0.93); }
+        }
+        
+        /* Cosmic Event Animations */
+        .cosmic-event {
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cosmic-event::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s;
+            opacity: 0;
+        }
+        
+        .cosmic-event:hover {
+            transform: scale(1.08) translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        
+        .cosmic-event:hover::before {
+            animation: shimmer 0.6s ease-in-out;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+        }
+        
+        .health-bar {
+            transition: width 0.8s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .health-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: healthShine 2s infinite;
+        }
+        
+        @keyframes healthShine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .modal {
+            backdrop-filter: blur(10px);
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8); }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .welcome-rocket {
+            animation: rocketFloat 4s ease-in-out infinite;
+        }
+        
+        @keyframes rocketFloat {
+            0%, 100% { transform: translateY(0px) rotate(-5deg); }
+            25% { transform: translateY(-15px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            75% { transform: translateY(-10px) rotate(0deg); }
+        }
+        
+        .text-glow {
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.8), 0 0 40px rgba(59, 130, 246, 0.6);
+        }
+        
+        .button-hover-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .button-hover-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .button-hover-effect:hover::before {
+            left: 100%;
+        }
+        
+        .character-select-glow {
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .character-select-glow:hover {
+            box-shadow: 0 0 50px rgba(59, 130, 246, 0.8);
+            transform: scale(1.1) rotate(3deg) translateY(-5px);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-white relative">
+    
+    <!-- Animated Background -->
+    <div class="space-bg"></div>
+    <div class="stars" id="stars"></div>
+    <div class="floating-particles" id="particles"></div>
+
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="flex flex-col items-center justify-center min-h-screen p-8 relative z-10">
+        <div class="text-center mb-12">
+            <div class="text-8xl mb-6 welcome-rocket">🚀</div>
+            <h1 class="text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent text-glow">
+                КОСМИЧЕСКИЙ ДОКТОР
+            </h1>
+            <p class="text-2xl mb-8 text-blue-300 pulse-glow">Спасите космонавтов от космических явлений!</p>
+        </div>
+        
+        <div class="space-y-6">
+            <button id="startGameBtn" class="button-hover-effect bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 px-12 py-6 rounded-2xl text-2xl font-bold transition-all transform hover:scale-110 pulse-glow shadow-2xl">
+                🎮 НАЧАТЬ ИГРУ
+            </button>
+            
+            <div class="text-center">
+                <button id="howToPlayBtn" class="button-hover-effect bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 px-8 py-4 rounded-xl text-lg font-semibold transition-all transform hover:scale-105">
+                    📚 Как играть?
+                </button>
+            </div>
+        </div>
+        
+        <div class="mt-12 text-center text-gray-400">
+            <p class="text-sm">🌟 Используйте знания медицины для лечения космических болезней 🌟</p>
+        </div>
+    </div>
+
+    <!-- Character Selection Screen -->
+    <div id="skinSelection" class="hidden flex flex-col items-center justify-center min-h-screen p-8 relative z-10">
+        <div class="text-center mb-8">
+            <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 bg-clip-text text-transparent floating">
+                🌟 Выбор Персонажа 🌟
+            </h1>
+            <h2 class="text-2xl mb-6 text-center pulse-glow bg-white/10 rounded-lg p-4">Кем вы хотите быть в космосе?</h2>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+            <div class="skin-option character-select-glow bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl p-6 text-center cursor-pointer hover:bg-white/20 transition-all border border-blue-400/30" data-skin="🧑‍🚀">
+                <div class="text-6xl mb-2 floating">🧑‍🚀</div>
+                <p class="text-sm font-semibold text-blue-300">Космонавт</p>
+                <p class="text-xs text-gray-400 mt-1">Опытный исследователь</p>
+            </div>
+            <div class="skin-option character-select-glow bg-gradient-to-br from-pink-500/20 to-red-500/20 rounded-xl p-6 text-center cursor-pointer hover:bg-white/20 transition-all border border-pink-400/30" data-skin="👩‍🚀">
+                <div class="text-6xl mb-2 floating">👩‍🚀</div>
+                <p class="text-sm font-semibold text-pink-300">Космонавт</p>
+                <p class="text-xs text-gray-400 mt-1">Смелая путешественница</p>
+            </div>
+            <div class="skin-option character-select-glow bg-gradient-to-br from-gray-500/20 to-blue-500/20 rounded-xl p-6 text-center cursor-pointer hover:bg-white/20 transition-all border border-gray-400/30" data-skin="🤖">
+                <div class="text-6xl mb-2 floating">🤖</div>
+                <p class="text-sm font-semibold text-gray-300">Робот</p>
+                <p class="text-xs text-gray-400 mt-1">Искусственный интеллект</p>
+            </div>
+            <div class="skin-option character-select-glow bg-gradient-to-br from-green-500/20 to-teal-500/20 rounded-xl p-6 text-center cursor-pointer hover:bg-white/20 transition-all border border-green-400/30" data-skin="👽">
+                <div class="text-6xl mb-2 floating">👽</div>
+                <p class="text-sm font-semibold text-green-300">Пришелец</p>
+                <p class="text-xs text-gray-400 mt-1">Дружелюбный инопланетянин</p>
+            </div>
+        </div>
+        
+        <button id="backToWelcome" class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 px-6 py-3 rounded-lg transition-all font-semibold">
+            ← Назад
+        </button>
+    </div>
+
+    <!-- Main Game Screen -->
+    <div id="gameScreen" class="hidden min-h-screen p-4 relative z-10">
+        <!-- Top Panel -->
+        <div class="flex justify-between items-center mb-6">
+            <button id="instructionsBtn" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-6 py-3 rounded-lg transition-all transform hover:scale-105 font-semibold">
+                📖 Instructions
+            </button>
+            
+            <!-- Health Bar -->
+            <div class="flex-1 mx-8">
+                <div class="text-center mb-2 font-bold">Health: <span id="healthValue">100</span>/100</div>
+                <div class="bg-gray-800/50 rounded-full h-6 overflow-hidden border border-gray-600">
+                    <div id="healthBar" class="health-bar bg-gradient-to-r from-green-500 to-green-400 h-full" style="width: 100%"></div>
+                </div>
+            </div>
+            
+            <button id="resetBtn" class="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 px-6 py-3 rounded-lg transition-all transform hover:scale-105 font-semibold">
+                🔄 Reset
+            </button>
+        </div>
+
+        <!-- Game Layout -->
+        <div class="max-w-6xl mx-auto">
+            <!-- Top Row Events -->
+            <div class="grid grid-cols-4 gap-3 mb-6 justify-items-center">
+                <div class="cosmic-event bg-gradient-to-br from-red-500 to-pink-500 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-red-400/50" data-event="magnetic">
+                    <div class="text-2xl mb-1">🌪️</div>
+                    <p class="text-xs font-semibold">Magnetic Storm</p>
+                </div>
+                
+                <div class="cosmic-event bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-yellow-400/50" data-event="solar">
+                    <div class="text-2xl mb-1">☀️</div>
+                    <p class="text-xs font-semibold">Solar Flare</p>
+                </div>
+                
+                <div class="cosmic-event bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-purple-400/50" data-event="radiation">
+                    <div class="text-2xl mb-1">☢️</div>
+                    <p class="text-xs font-semibold">Space Radiation</p>
+                </div>
+                
+                <div class="cosmic-event bg-gradient-to-br from-orange-500 to-red-600 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-orange-400/50" data-event="eclipse">
+                    <div class="text-2xl mb-1">🌑</div>
+                    <p class="text-xs font-semibold">Solar Eclipse</p>
+                </div>
+            </div>
+
+            <!-- Second Row Events -->
+            <div class="grid grid-cols-4 gap-3 mb-6 justify-items-center">
+                <div class="cosmic-event bg-gradient-to-br from-blue-400 to-purple-400 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-blue-400/50" data-event="fullmoon">
+                    <div class="text-2xl mb-1">🌕</div>
+                    <p class="text-xs font-semibold">Full Moon</p>
+                </div>
+                
+                <div class="cosmic-event bg-gradient-to-br from-green-500 to-teal-500 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-green-400/50" data-event="meteor">
+                    <div class="text-2xl mb-1">☄️</div>
+                    <p class="text-xs font-semibold">Meteor Shower</p>
+                </div>
+                
+                <div class="cosmic-event bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-indigo-400/50" data-event="storm">
+                    <div class="text-2xl mb-1">⚡</div>
+                    <p class="text-xs font-semibold">Space Storm</p>
+                </div>
+                
+                <div class="cosmic-event bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-cyan-400/50" data-event="comet">
+                    <div class="text-2xl mb-1">🌠</div>
+                    <p class="text-xs font-semibold">Comet Activity</p>
+                </div>
+            </div>
+
+            <!-- Character in Center -->
+            <div class="flex justify-center mb-6">
+                <div id="character" class="character text-9xl floating"></div>
+            </div>
+
+            <!-- Third Row Events -->
+            <div class="grid grid-cols-4 gap-3 mb-6 justify-items-center">
+                <div class="cosmic-event bg-gradient-to-br from-pink-500 to-purple-500 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-pink-400/50" data-event="aurora">
+                    <div class="text-2xl mb-1">🌌</div>
+                    <p class="text-xs font-semibold">Aurora Storm</p>
+                </div>
+                
+                <div class="cosmic-event bg-gradient-to-br from-gray-500 to-slate-600 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-gray-400/50" data-event="blackhole">
+                    <div class="text-2xl mb-1">🕳️</div>
+                    <p class="text-xs font-semibold">Black Hole</p>
+                </div>
+                
+                <div class="cosmic-event bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-emerald-400/50" data-event="nebula">
+                    <div class="text-2xl mb-1">🌫️</div>
+                    <p class="text-xs font-semibold">Nebula Gas</p>
+                </div>
+                
+                <div class="cosmic-event bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-violet-400/50" data-event="pulsar">
+                    <div class="text-2xl mb-1">💫</div>
+                    <p class="text-xs font-semibold">Pulsar Waves</p>
+                </div>
+            </div>
+
+            <!-- Bottom Row Events -->
+            <div class="grid grid-cols-4 gap-3 justify-items-center">
+                <div class="cosmic-event bg-gradient-to-br from-red-600 to-orange-600 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-red-500/50" data-event="supernova">
+                    <div class="text-2xl mb-1">💥</div>
+                    <p class="text-xs font-semibold">Supernova</p>
+                </div>
+                
+                <div class="cosmic-event bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-blue-500/50" data-event="wormhole">
+                    <div class="text-2xl mb-1">🌀</div>
+                    <p class="text-xs font-semibold">Wormhole</p>
+                </div>
+                
+                <div class="cosmic-event bg-gradient-to-br from-yellow-600 to-amber-600 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-yellow-500/50" data-event="quasar">
+                    <div class="text-2xl mb-1">⭐</div>
+                    <p class="text-xs font-semibold">Quasar Beam</p>
+                </div>
+                
+                <div class="cosmic-event bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl p-3 text-center w-28 h-28 flex flex-col justify-center border border-teal-400/50" data-event="gravity">
+                    <div class="text-2xl mb-1">🌍</div>
+                    <p class="text-xs font-semibold">Gravity Wave</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions Modal -->
+    <div id="instructionsModal" class="hidden fixed inset-0 modal bg-black/60 flex items-center justify-center p-4 z-50">
+        <div class="bg-gray-900/90 rounded-xl p-6 max-w-5xl max-h-[80vh] overflow-y-auto border border-blue-400/30">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">📖 Treatment Guide</h2>
+                <button id="closeInstructions" class="text-3xl hover:text-red-400 transition-colors">✕</button>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs max-h-96 overflow-y-auto">
+                <div class="bg-gradient-to-br from-red-500/20 to-pink-500/20 rounded-lg p-3 border border-red-400/30">
+                    <h3 class="font-bold text-sm mb-1 text-red-300">🌪️ Magnetic Storm</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> headache, blood pressure, fatigue</p>
+                    <p><strong>Treatment:</strong> water, sleep, medication</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-lg p-3 border border-yellow-400/30">
+                    <h3 class="font-bold text-sm mb-1 text-yellow-300">☀️ Solar Flare</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> fatigue, irritability</p>
+                    <p><strong>Treatment:</strong> rest, sleep, water</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-lg p-3 border border-purple-400/30">
+                    <h3 class="font-bold text-sm mb-1 text-purple-300">☢️ Space Radiation</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> malaise, weakness</p>
+                    <p><strong>Treatment:</strong> vitamins, water, rest</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-lg p-3 border border-orange-400/30">
+                    <h3 class="font-bold text-sm mb-1 text-orange-300">🌑 Solar Eclipse</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> confusion, energy changes</p>
+                    <p><strong>Treatment:</strong> meditation, candles, books</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg p-3 border border-blue-400/30">
+                    <h3 class="font-bold text-sm mb-1 text-blue-300">🌕 Full Moon</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> insomnia, anxiety</p>
+                    <p><strong>Treatment:</strong> calm music, relaxation</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-500/20 to-teal-500/20 rounded-lg p-3 border border-green-400/30">
+                    <h3 class="font-bold text-sm mb-1 text-green-300">☄️ Meteor Shower</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> insomnia, mood swings</p>
+                    <p><strong>Treatment:</strong> sleep schedule, meditation</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-indigo-500/20 to-purple-600/20 rounded-lg p-3 border border-indigo-400/30">
+                    <h3 class="font-bold text-sm mb-1 text-indigo-300">⚡ Space Storm</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> fatigue, low immunity</p>
+                    <p><strong>Treatment:</strong> vitamins, rest, water</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-lg p-3 border border-cyan-400/30">
+                    <h3 class="font-bold text-sm mb-1 text-cyan-300">🌠 Comet Activity</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> anxiety, stress</p>
+                    <p><strong>Treatment:</strong> herbal tea, breathing</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-pink-500/20 to-purple-500/20 rounded-lg p-3 border border-pink-400/30">
+                    <h3 class="font-bold text-sm mb-1 text-pink-300">🌌 Aurora Storm</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> dizziness, visual issues</p>
+                    <p><strong>Treatment:</strong> dark glasses, lie down</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-gray-500/20 to-slate-600/20 rounded-lg p-3 border border-gray-400/30">
+                    <h3 class="font-bold text-sm mb-1 text-gray-300">🕳️ Black Hole</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> gravity stress, disorientation</p>
+                    <p><strong>Treatment:</strong> stay calm, hold something</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-emerald-500/20 to-green-600/20 rounded-lg p-3 border border-emerald-400/30">
+                    <h3 class="font-bold text-sm mb-1 text-emerald-300">🌫️ Nebula Gas</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> breathing issues, weakness</p>
+                    <p><strong>Treatment:</strong> mask, slow breathing</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-violet-500/20 to-purple-600/20 rounded-lg p-3 border border-violet-400/30">
+                    <h3 class="font-bold text-sm mb-1 text-violet-300">💫 Pulsar Waves</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> energy pulses, confusion</p>
+                    <p><strong>Treatment:</strong> rhythmic music, sync breathing</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-red-600/20 to-orange-600/20 rounded-lg p-3 border border-red-500/30">
+                    <h3 class="font-bold text-sm mb-1 text-red-400">💥 Supernova</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> intense energy, light</p>
+                    <p><strong>Treatment:</strong> eye protection, shelter</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-blue-600/20 to-indigo-600/20 rounded-lg p-3 border border-blue-500/30">
+                    <h3 class="font-bold text-sm mb-1 text-blue-400">🌀 Wormhole</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> space-time distortion</p>
+                    <p><strong>Treatment:</strong> anti-nausea, focus mind</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-yellow-600/20 to-amber-600/20 rounded-lg p-3 border border-yellow-500/30">
+                    <h3 class="font-bold text-sm mb-1 text-yellow-400">⭐ Quasar Beam</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> energy beam effects</p>
+                    <p><strong>Treatment:</strong> shield up, move away</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-teal-500/20 to-cyan-600/20 rounded-lg p-3 border border-teal-400/30">
+                    <h3 class="font-bold text-sm mb-1 text-teal-300">🌍 Gravity Wave</h3>
+                    <p class="mb-1"><strong>Symptoms:</strong> gravitational fluctuations</p>
+                    <p><strong>Treatment:</strong> hold tight, stay centered</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Treatment Modal -->
+    <div id="treatmentModal" class="hidden fixed inset-0 modal bg-black/60 flex items-center justify-center p-4 z-50">
+        <div class="bg-gray-900/90 rounded-xl p-6 max-w-md w-full border border-blue-400/30">
+            <h2 id="eventTitle" class="text-2xl font-bold mb-4 text-center bg-gradient-to-r from-yellow-400 to-red-400 bg-clip-text text-transparent"></h2>
+            <p id="symptoms" class="text-center mb-6 text-yellow-300 bg-yellow-500/10 rounded-lg p-3"></p>
+            
+            <div class="text-center mb-6">
+                <p class="mb-4 font-semibold text-lg">What will you do?</p>
+                <div id="treatmentOptions" class="space-y-3"></div>
+            </div>
+            
+            <div id="result" class="hidden text-center p-4 rounded-lg mb-4 font-semibold"></div>
+            
+            <button id="closeTreatment" class="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 py-3 rounded-lg transition-all font-semibold">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+        <div class="bg-gradient-to-br from-red-900/90 to-purple-900/90 rounded-xl p-8 max-w-md w-full text-center border border-red-400/50">
+            <div class="text-6xl mb-4 animate-pulse">💀</div>
+            <h2 class="text-3xl font-bold mb-4 text-red-300">Game Over!</h2>
+            <p class="text-lg mb-6 text-red-200">Your character feels too bad to continue...</p>
+            <button id="restartGame" class="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105">
+                🔄 Start Again
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentHealth = 100;
+        let selectedSkin = '';
+        
+        // Human Voice Sound System
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Human voice sounds using speech synthesis
+        function speakText(text, rate = 1, pitch = 1, volume = 0.8) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = rate;
+                utterance.pitch = pitch;
+                utterance.volume = volume;
+                utterance.lang = 'ru-RU';
+                speechSynthesis.speak(utterance);
+            }
+        }
+        
+        function playHumanPainSound() {
+            const painSounds = ['Ой!', 'Ах!', 'Больно!', 'Ауч!'];
+            const randomPain = painSounds[Math.floor(Math.random() * painSounds.length)];
+            speakText(randomPain, 1.2, 0.8, 0.9);
+        }
+        
+        function playHumanJoySound() {
+            const joySounds = ['Ура!', 'Да!', 'Отлично!', 'Супер!', 'Вау!'];
+            const randomJoy = joySounds[Math.floor(Math.random() * joySounds.length)];
+            speakText(randomJoy, 1.1, 1.3, 0.9);
+        }
+        
+        function playHumanScaredSound() {
+            const scaredSounds = ['Ах!', 'О нет!', 'Помогите!', 'Страшно!'];
+            const randomScared = scaredSounds[Math.floor(Math.random() * scaredSounds.length)];
+            speakText(randomScared, 1.3, 0.7, 0.8);
+        }
+        
+        function playHumanExcitedSound() {
+            const excitedSounds = ['Вау!', 'Круто!', 'Невероятно!', 'Потрясающе!'];
+            const randomExcited = excitedSounds[Math.floor(Math.random() * excitedSounds.length)];
+            speakText(randomExcited, 1.2, 1.4, 0.9);
+        }
+        
+        function playHumanConfusedSound() {
+            const confusedSounds = ['Что?', 'Хм...', 'Странно...', 'Не понимаю...'];
+            const randomConfused = confusedSounds[Math.floor(Math.random() * confusedSounds.length)];
+            speakText(randomConfused, 0.9, 1.1, 0.8);
+        }
+        
+        function playHumanWeakSound() {
+            const weakSounds = ['Ох...', 'Устал...', 'Слабость...', 'Тяжело...'];
+            const randomWeak = weakSounds[Math.floor(Math.random() * weakSounds.length)];
+            speakText(randomWeak, 0.8, 0.9, 0.7);
+        }
+        
+        function playComplexSound(frequencies, durations, types, volumes, delays = [0]) {
+            frequencies.forEach((freq, index) => {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+                    oscillator.type = types[index] || 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(volumes[index] || 0.05, audioContext.currentTime + 0.01);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + (durations[index] || 0.3));
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + (durations[index] || 0.3));
+                }, delays[index] || 0);
+            });
+        }
+        
+        function playMagneticStormSound() {
+            playHumanScaredSound();
+            setTimeout(() => {
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        playComplexSound([150 + Math.random() * 100, 80 + Math.random() * 50], [0.3, 0.5], ['sawtooth', 'square'], [0.08, 0.05]);
+                    }, i * 100);
+                }
+            }, 800);
+        }
+        
+        function playSolarFlareSound() {
+            playHumanExcitedSound();
+            setTimeout(() => {
+                playComplexSound([800, 600, 400], [0.4, 0.3, 0.2], ['sine', 'sine', 'sine'], [0.06, 0.05, 0.04], [0, 200, 400]);
+            }, 800);
+        }
+        
+        function playRadiationSound() {
+            playHumanScaredSound();
+            setTimeout(() => {
+                for (let i = 0; i < 8; i++) {
+                    setTimeout(() => {
+                        playComplexSound([1200], [0.05], ['square'], [0.04]);
+                    }, i * 80);
+                }
+            }, 800);
+        }
+        
+        function playSuccessSound() {
+            playHumanJoySound();
+        }
+        
+        function playErrorSound() {
+            playHumanPainSound();
+        }
+        
+        function playGameOverSound() {
+            speakText('О нет! Игра окончена!', 1, 0.7, 0.9);
+            setTimeout(() => {
+                playComplexSound([220, 185, 147, 100], [0.5, 0.6, 0.8, 1.2], ['sawtooth', 'sawtooth', 'sawtooth', 'triangle'], [0.08, 0.06, 0.05, 0.04], [0, 300, 600, 1000]);
+            }, 1000);
+        }
+        
+        function playWelcomeSound() {
+            speakText('Добро пожаловать в Космический Доктор!', 1, 1.2, 0.9);
+        }
+        
+        function playCharacterSelectSound() {
+            speakText('Выберите своего персонажа!', 1.1, 1.1, 0.8);
+        }
+        
+        function playSpaceAmbient() {
+            playComplexSound([60, 90], [2, 1.5], ['sine', 'sine'], [0.02, 0.015]);
+        }
+        
+        const events = {
+            magnetic: {
+                title: '🌪️ Magnetic Storm',
+                symptoms: 'Character has headache, blood pressure jumps and feels tired...',
+                correct: ['💧 Drink water', '😴 Sleep', '💊 Take medication', '🏃‍♀️ Exercise'],
+                wrong: ['☕ Drink coffee', '📱 Use phone', '🍔 Eat fast food', '❌ Do nothing'],
+                sound: playMagneticStormSound,
+                emotion: 'scared'
+            },
+            solar: {
+                title: '☀️ Solar Flare',
+                symptoms: 'Character feels tired, irritable and weak...',
+                correct: ['😴 Rest', '💤 Sleep', '💧 Drink water'],
+                wrong: ['📱 Play on phone', '☕ Drink coffee', '🎵 Loud music', '❌ Do nothing'],
+                sound: playSolarFlareSound,
+                emotion: 'excited'
+            },
+            radiation: {
+                title: '☢️ Space Radiation',
+                symptoms: 'Character feels general malaise and weakness...',
+                correct: ['💊 Take vitamins', '💧 Lots of water', '😴 Rest'],
+                wrong: ['🍺 Drink alcohol', '🚬 Smoke', '🏃‍♀️ Heavy exercise', '❌ Do nothing'],
+                sound: playRadiationSound,
+                emotion: 'scared'
+            },
+            eclipse: {
+                title: '🌑 Solar Eclipse',
+                symptoms: 'Character feels mysterious energy changes and confusion...',
+                correct: ['🧘‍♀️ Meditation', '🕯️ Candles', '📖 Read books'],
+                wrong: ['👀 Stare at eclipse', '📱 Take photos', '🎉 Party', '❌ Do nothing'],
+                sound: () => {
+                    playHumanConfusedSound();
+                    setTimeout(() => playComplexSound([100, 150, 200], [1, 0.8, 0.6], ['triangle', 'sine', 'sawtooth'], [0.05, 0.04, 0.03]), 800);
+                },
+                emotion: 'confused'
+            },
+            fullmoon: {
+                title: '🌕 Полнолуние',
+                symptoms: 'Персонаж страдает от бессонницы, раздражительности и повышенной тревожности...',
+                correct: ['🎵 Спокойная музыка', '🧘‍♀️ Релаксация', '🛁 Теплая ванна'],
+                wrong: ['☕ Кофе', '📱 Соцсети', '🎬 Фильм ужасов', '❌ Ничего не делать'],
+                sound: () => {
+                    playHumanExcitedSound();
+                    setTimeout(() => playComplexSound([200, 150], [1, 1.2], ['sine', 'sine'], [0.04, 0.03]), 800);
+                },
+                emotion: 'excited'
+            },
+            meteor: {
+                title: '☄️ Метеоритный дождь',
+                symptoms: 'Персонаж страдает от бессонницы и перепадов настроения...',
+                correct: ['😴 Режим сна', '🧘‍♀️ Медитация', '🚶‍♀️ Легкие прогулки'],
+                wrong: ['🎮 Игры всю ночь', '☕ Энергетики', '📺 Телевизор', '❌ Ничего не делать'],
+                sound: () => {
+                    playHumanExcitedSound();
+                    setTimeout(() => {
+                        for (let i = 0; i < 6; i++) {
+                            setTimeout(() => playComplexSound([800 - i * 100], [0.3], ['sine'], [0.05]), i * 150);
+                        }
+                    }, 800);
+                },
+                emotion: 'excited'
+            },
+            storm: {
+                title: '⚡ Космическая буря',
+                symptoms: 'Персонаж испытывает сильную усталость и низкий иммунитет...',
+                correct: ['💊 Витамины', '😴 Отдых', '💧 Вода', '💤 Сон'],
+                wrong: ['🍔 Фастфуд', '🍺 Алкоголь', '🏃‍♀️ Спорт', '❌ Ничего не делать'],
+                sound: () => {
+                    playHumanScaredSound();
+                    setTimeout(() => {
+                        playComplexSound([100, 150, 80], [0.8, 0.6, 1], ['sawtooth', 'square', 'sawtooth'], [0.08, 0.06, 0.05], [0, 300, 600]);
+                    }, 800);
+                },
+                emotion: 'scared'
+            },
+            comet: {
+                title: '🌠 Активность кометы',
+                symptoms: 'Персонаж испытывает тревогу, стресс и плохо спит...',
+                correct: ['🍵 Травяной чай', '🫁 Дыхательные упражнения', '🚶‍♀️ Прогулка'],
+                wrong: ['☕ Кофе', '📱 Новости', '🎬 Стрессовые фильмы', '❌ Ничего не делать'],
+                sound: () => {
+                    playHumanExcitedSound();
+                    setTimeout(() => playComplexSound([400, 600, 300], [0.5, 0.4, 0.6], ['sine', 'sine', 'sine'], [0.05, 0.04, 0.03], [0, 200, 400]), 800);
+                },
+                emotion: 'excited'
+            },
+            aurora: {
+                title: '🌌 Полярное сияние',
+                symptoms: 'Персонаж чувствует головокружение и зрительные нарушения...',
+                correct: ['😎 Темные очки', '🛏️ Лечь', '💧 Пить воду'],
+                wrong: ['👀 Смотреть на свет', '🚗 Водить машину', '🏃‍♀️ Бегать', '❌ Ничего не делать'],
+                sound: () => {
+                    playHumanExcitedSound();
+                    setTimeout(() => playComplexSound([300, 500, 700], [0.8, 0.6, 0.4], ['sine', 'triangle', 'sine'], [0.05, 0.04, 0.03]), 800);
+                },
+                emotion: 'dizzy'
+            },
+            blackhole: {
+                title: '🕳️ Черная дыра',
+                symptoms: 'Персонаж чувствует экстремальный гравитационный стресс и дезориентацию...',
+                correct: ['🧘‍♀️ Сохранять спокойствие', '🤝 Держаться за что-то', '💊 Против тошноты'],
+                wrong: ['🏃‍♀️ Паниковать и бежать', '🤢 Смотреть вниз', '📱 Делать селфи', '❌ Ничего не делать'],
+                sound: () => {
+                    playHumanScaredSound();
+                    setTimeout(() => playComplexSound([50, 80, 120], [2, 1.5, 1], ['sawtooth', 'triangle', 'square'], [0.06, 0.05, 0.04]), 800);
+                },
+                emotion: 'shocked'
+            },
+            nebula: {
+                title: '🌫️ Туманность',
+                symptoms: 'Персонаж испытывает проблемы с дыханием и чувствует слабость...',
+                correct: ['😷 Надеть маску', '🫁 Медленное дыхание', '💨 Свежий воздух'],
+                wrong: ['🏃‍♀️ Тяжелые упражнения', '🚬 Курить', '🤿 Глубокие вдохи', '❌ Ничего не делать'],
+                sound: () => {
+                    playHumanWeakSound();
+                    setTimeout(() => playComplexSound([200, 180, 160], [1, 1.2, 1.5], ['triangle', 'sine', 'triangle'], [0.04, 0.03, 0.02]), 800);
+                },
+                emotion: 'weak'
+            },
+            pulsar: {
+                title: '💫 Пульсарные волны',
+                symptoms: 'Персонаж испытывает ритмичные энергетические импульсы и замешательство...',
+                correct: ['🎵 Ритмичная музыка', '🧘‍♀️ Синхронное дыхание', '⏰ Перерывы по времени'],
+                wrong: ['🔇 Заткнуть уши', '🏃‍♀️ Бороться с ритмом', '📱 Громкая музыка', '❌ Ничего не делать'],
+                sound: () => {
+                    playHumanConfusedSound();
+                    setTimeout(() => {
+                        for (let i = 0; i < 5; i++) {
+                            setTimeout(() => playComplexSound([400], [0.2], ['square'], [0.05]), i * 300);
+                        }
+                    }, 800);
+                },
+                emotion: 'confused'
+            },
+            supernova: {
+                title: '💥 Сверхновая',
+                symptoms: 'Персонаж подавлен интенсивной энергией и светом...',
+                correct: ['😎 Защита глаз', '🏠 Искать укрытие', '🧘‍♀️ Сохранять спокойствие'],
+                wrong: ['👀 Смотреть прямо', '📸 Фотографировать', '🏃‍♀️ Бежать наружу', '❌ Ничего не делать'],
+                sound: () => {
+                    playHumanScaredSound();
+                    setTimeout(() => playComplexSound([1000, 800, 600, 400], [0.3, 0.4, 0.5, 0.6], ['sawtooth', 'square', 'triangle', 'sine'], [0.08, 0.06, 0.05, 0.04], [0, 100, 200, 300]), 800);
+                },
+                emotion: 'shocked'
+            },
+            wormhole: {
+                title: '🌀 Червоточина',
+                symptoms: 'Персонаж чувствует искажение пространства-времени и тошноту...',
+                correct: ['🤢 Против тошноты', '🧘‍♀️ Сосредоточить разум', '🤝 Держаться крепко'],
+                wrong: ['🤸‍♀️ Двигаться', '🤔 Думать усиленно', '📱 Записывать видео', '❌ Ничего не делать'],
+                sound: () => {
+                    playHumanConfusedSound();
+                    setTimeout(() => playComplexSound([150, 200, 150, 100], [0.5, 0.3, 0.5, 0.8], ['triangle', 'sine', 'triangle', 'sawtooth'], [0.05, 0.06, 0.05, 0.04], [0, 200, 400, 600]), 800);
+                },
+                emotion: 'dizzy'
+            },
+            quasar: {
+                title: '⭐ Квазарный луч',
+                symptoms: 'Персонаж испытывает эффекты интенсивного энергетического луча...',
+                correct: ['🛡️ Поднять щит', '🏃‍♀️ Отойти', '💊 Энергетические таблетки'],
+                wrong: ['👀 Смотреть на луч', '🤳 Время селфи', '🏃‍♀️ Бежать к лучу', '❌ Ничего не делать'],
+                sound: () => {
+                    playHumanExcitedSound();
+                    setTimeout(() => playComplexSound([1200, 1000, 800], [0.4, 0.5, 0.6], ['sine', 'triangle', 'square'], [0.06, 0.05, 0.04], [0, 150, 300]), 800);
+                },
+                emotion: 'shocked'
+            },
+            gravity: {
+                title: '🌍 Гравитационная волна',
+                symptoms: 'Персонаж чувствует гравитационные флуктуации и нестабильность...',
+                correct: ['🤝 Держаться крепко', '🧘‍♀️ Оставаться в центре', '⚖️ Найти баланс'],
+                wrong: ['🤸‍♀️ Прыгать', '🏃‍♀️ Быстро бегать', '🤹‍♀️ Делать трюки', '❌ Ничего не делать'],
+                sound: () => {
+                    playHumanScaredSound();
+                    setTimeout(() => playComplexSound([80, 120, 80, 60], [0.8, 0.6, 0.8, 1], ['triangle', 'sine', 'triangle', 'sawtooth'], [0.05, 0.04, 0.05, 0.03], [0, 300, 600, 900]), 800);
+                },
+                emotion: 'confused'
+            }
+        };
+
+        // Create animated background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize background
+        createStars();
+        createParticles();
+
+        // Welcome screen handlers
+        document.getElementById('startGameBtn').addEventListener('click', () => {
+            playWelcomeSound();
+            setTimeout(() => {
+                document.getElementById('welcomeScreen').classList.add('hidden');
+                document.getElementById('skinSelection').classList.remove('hidden');
+                playCharacterSelectSound();
+            }, 1000);
+        });
+
+        document.getElementById('howToPlayBtn').addEventListener('click', () => {
+            document.getElementById('instructionsModal').classList.remove('hidden');
+        });
+
+        document.getElementById('backToWelcome').addEventListener('click', () => {
+            document.getElementById('skinSelection').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+        });
+
+        // Character selection
+        document.querySelectorAll('.skin-option').forEach(option => {
+            option.addEventListener('click', () => {
+                selectedSkin = option.dataset.skin;
+                document.getElementById('character').textContent = selectedSkin;
+                document.getElementById('skinSelection').classList.add('hidden');
+                document.getElementById('gameScreen').classList.remove('hidden');
+                
+                // Play selection sound and ambient space sound
+                playSuccessSound();
+                setTimeout(() => {
+                    speakText('Игра началась! Удачи!', 1.1, 1.2, 0.8);
+                    playSpaceAmbient();
+                }, 1000);
+            });
+        });
+
+        // Cosmic events
+        document.querySelectorAll('.cosmic-event').forEach(event => {
+            event.addEventListener('click', () => {
+                const eventType = event.dataset.event;
+                showTreatmentModal(eventType);
+            });
+        });
+
+        function showTreatmentModal(eventType) {
+            const event = events[eventType];
+            const character = document.getElementById('character');
+            
+            // Play event sound and show initial emotion
+            event.sound();
+            character.classList.add(event.emotion);
+            
+            // After emotion animation, character gets sad
+            setTimeout(() => {
+                character.classList.remove(event.emotion);
+                character.classList.add('sad');
+            }, 1500);
+            
+            // After 2 seconds show modal and character gets sick
+            setTimeout(() => {
+                character.classList.remove('sad');
+                character.classList.add('sick');
+                
+                document.getElementById('eventTitle').textContent = event.title;
+                document.getElementById('symptoms').textContent = event.symptoms;
+                
+                const optionsContainer = document.getElementById('treatmentOptions');
+                optionsContainer.innerHTML = '';
+                
+                // Mix correct and wrong options
+                const allOptions = [...event.correct, ...event.wrong];
+                const shuffledOptions = allOptions.sort(() => Math.random() - 0.5);
+                
+                shuffledOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.className = 'w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 py-3 px-4 rounded-lg transition-all transform hover:scale-105 font-semibold';
+                    button.textContent = option;
+                    button.addEventListener('click', () => handleTreatment(option, event));
+                    optionsContainer.appendChild(button);
+                });
+                
+                document.getElementById('treatmentModal').classList.remove('hidden');
+            }, 3500);
+        }
+
+        function handleTreatment(selectedOption, event) {
+            const resultDiv = document.getElementById('result');
+            const character = document.getElementById('character');
+            
+            if (event.correct.includes(selectedOption)) {
+                // Correct choice
+                playSuccessSound();
+                currentHealth = Math.min(100, currentHealth + 15);
+                resultDiv.className = 'text-center p-4 rounded-lg mb-4 bg-gradient-to-r from-green-600 to-green-500 font-semibold';
+                resultDiv.textContent = '✅ Great choice! Character feels better!';
+                character.classList.remove('sick');
+                character.classList.add('happy');
+                setTimeout(() => character.classList.remove('happy'), 1200);
+            } else {
+                // Wrong choice
+                playErrorSound();
+                currentHealth = Math.max(0, currentHealth - 20);
+                resultDiv.className = 'text-center p-4 rounded-lg mb-4 bg-gradient-to-r from-red-600 to-red-500 font-semibold';
+                resultDiv.textContent = '❌ Wrong choice! Character feels worse...';
+                // Character stays sick for wrong choice
+            }
+            
+            updateHealthBar();
+            resultDiv.classList.remove('hidden');
+            
+            // Hide treatment options
+            document.getElementById('treatmentOptions').style.display = 'none';
+            
+            if (currentHealth <= 0) {
+                setTimeout(() => {
+                    showGameOver();
+                }, 1000);
+            }
+        }
+
+        function showGameOver() {
+            const character = document.getElementById('character');
+            character.classList.remove('sick');
+            character.classList.add('dead');
+            playGameOverSound();
+            
+            setTimeout(() => {
+                document.getElementById('treatmentModal').classList.add('hidden');
+                document.getElementById('gameOverScreen').classList.remove('hidden');
+            }, 3000);
+        }
+
+        function resetGame() {
+            currentHealth = 100;
+            updateHealthBar();
+            const character = document.getElementById('character');
+            character.classList.remove('sick', 'happy', 'sad', 'dead', 'scared', 'excited', 'confused', 'dizzy', 'shocked', 'weak');
+            document.getElementById('treatmentModal').classList.add('hidden');
+            document.getElementById('gameOverScreen').classList.add('hidden');
+            document.getElementById('instructionsModal').classList.add('hidden');
+            document.getElementById('result').classList.add('hidden');
+            document.getElementById('treatmentOptions').style.display = 'block';
+            
+            // Play ambient space sound
+            playSpaceAmbient();
+        }
+
+        function updateHealthBar() {
+            const healthBar = document.getElementById('healthBar');
+            const healthValue = document.getElementById('healthValue');
+            
+            healthValue.textContent = currentHealth;
+            healthBar.style.width = currentHealth + '%';
+            
+            if (currentHealth > 70) {
+                healthBar.className = 'health-bar bg-gradient-to-r from-green-500 to-green-400 h-full';
+            } else if (currentHealth > 30) {
+                healthBar.className = 'health-bar bg-gradient-to-r from-yellow-500 to-yellow-400 h-full';
+            } else {
+                healthBar.className = 'health-bar bg-gradient-to-r from-red-500 to-red-400 h-full';
+            }
+        }
+
+        // Event listeners
+        document.getElementById('instructionsBtn').addEventListener('click', () => {
+            document.getElementById('instructionsModal').classList.remove('hidden');
+        });
+
+        document.getElementById('closeInstructions').addEventListener('click', () => {
+            document.getElementById('instructionsModal').classList.add('hidden');
+        });
+
+        document.getElementById('closeTreatment').addEventListener('click', () => {
+            document.getElementById('treatmentModal').classList.add('hidden');
+            document.getElementById('result').classList.add('hidden');
+            document.getElementById('treatmentOptions').style.display = 'block';
+            document.getElementById('character').classList.remove('sick', 'sad', 'scared', 'excited', 'confused', 'dizzy', 'shocked', 'weak');
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            resetGame();
+        });
+
+        document.getElementById('restartGame').addEventListener('click', () => {
+            resetGame();
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            speakText('Добро пожаловать обратно!', 1, 1.1, 0.8);
+        });
+
+        // Close modals by clicking outside
+        document.getElementById('instructionsModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                document.getElementById('instructionsModal').classList.add('hidden');
+            }
+        });
+
+        document.getElementById('treatmentModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                document.getElementById('treatmentModal').classList.add('hidden');
+                document.getElementById('result').classList.add('hidden');
+                document.getElementById('treatmentOptions').style.display = 'block';
+                document.getElementById('character').classList.remove('sick', 'sad', 'scared', 'excited', 'confused', 'dizzy', 'shocked', 'weak');
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9891ab0eb6859e03',t:'MTc1OTU0OTMzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
